@@ -34,22 +34,17 @@
 
       const data = {
         nombre: document.getElementById("nombre").value,
-        email: document.getElementById("email").value,
-        url: document.getElementById("url").value
+        correo: document.getElementById("email").value, // coincide con Flask
+        qr_data: document.getElementById("url").value   // coincide con Flask
       };
 
       try {
-        // Cambié la ruta a /send y mapeé los campos
-        const response = await fetch("/send", {
+        const response = await fetch("/send", { // apunta al endpoint Flask
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            nombre: data.nombre,
-            correo: data.email,   // Flask espera "correo"
-            qr_data: data.url     // Flask espera "qr_data"
-          })
+          body: JSON.stringify(data)
         });
 
         const result = await response.json();
@@ -69,3 +64,4 @@
   </script>
 </body>
 </html>
+
