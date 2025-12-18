@@ -32,7 +32,7 @@ def generar_y_enviar(nombre, receiver_email, qr_data):
     pdf.cell(200, 10, txt="Su QR está listo", ln=True, align='C')
     pdf.image(qr_file, x=10, y=20, w=100)
     # Imagen extra del repo
-    pdf.image(os.path.join("imagenes", "images.png"), x=10, y=120, w=50)
+    pdf.image(os.path.join("imagenes", "barca.png"), x=10, y=120, w=50)
     pdf.output(pdf_file)
 
     # --- Enviar email ---
@@ -79,6 +79,7 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
