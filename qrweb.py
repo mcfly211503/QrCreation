@@ -8,6 +8,10 @@ from email import encoders
 import smtplib
 
 app = Flask(__name__)
+@app.route("/")
+def index():
+    return send_from_directory(".", "index.html")
+
 
 # --- Convertir tu código en función ---
 def generar_y_enviar(nombre, receiver_email, qr_data):
@@ -67,3 +71,4 @@ def send():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
