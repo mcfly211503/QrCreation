@@ -1,4 +1,4 @@
-# archivo: qr_email_logic.py
+from flask import Flask, request, jsonify
 import os
 import segno
 from fpdf import FPDF
@@ -7,6 +7,9 @@ from email.mime.multipart import MIMEMultipart
 from email import encoders
 import smtplib
 
+app = Flask(__name__)
+
+# --- Convertir tu código en función ---
 def generar_y_enviar(nombre, receiver_email, qr_data):
     nombre_pdf = nombre.replace(" ", "_")
 
@@ -32,7 +35,6 @@ def generar_y_enviar(nombre, receiver_email, qr_data):
     msg['To'] = receiver_email
     msg['Subject'] = "Tu QR"
     
-    # Adjuntar PDF
     with open(pdf_file, "rb") as f:
         part = MIMEBase('application', 'octet-stream')
         part.set_payload(f.read())
@@ -40,13 +42,28 @@ def generar_y_enviar(nombre, receiver_email, qr_data):
     part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(pdf_file)}')
     msg.attach(part)
 
-    # Conexión SMTP
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
     server.login(email_user, email_pass)
     server.sendmail(email_user, receiver_email, msg.as_string())
     server.quit()
 
-    # Borrar archivos temporales
     os.remove(pdf_file)
     os.remove(qr_file)
+
+# --- Endpoint Flask ---
+@app.route("/send", methods=["POST"])
+def send():
+    data = request.get_json()
+    nombre = data.get("nombre")
+    correo = data.get("correo")
+    qr_data = data.get("qr_data")
+    
+    try:
+        generar_y_enviar(nombre, correo, qr_data)
+        return jsonify({"status": "ok", "message": "Correo enviado correctamente!"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True)
