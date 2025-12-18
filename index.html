@@ -39,22 +39,26 @@
       };
 
       try {
-        const response = await fetch("https://qrcreation.onrender.com", {
+        // Cambié la ruta a /send y mapeé los campos
+        const response = await fetch("/send", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            // "X-API-KEY": "tu_api_key_segura"  // si usas API key
+            "Content-Type": "application/json"
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify({
+            nombre: data.nombre,
+            correo: data.email,   // Flask espera "correo"
+            qr_data: data.url     // Flask espera "qr_data"
+          })
         });
 
         const result = await response.json();
 
-        if(result.ok){
+        if(result.status === "ok"){
           status.textContent = "✅ Correo enviado correctamente!";
           status.style.color = "green";
         } else {
-          status.textContent = "❌ Error: " + (result.error || "Algo salió mal");
+          status.textContent = "❌ Error: " + (result.message || "Algo salió mal");
           status.style.color = "red";
         }
       } catch(err) {
@@ -65,4 +69,3 @@
   </script>
 </body>
 </html>
-
