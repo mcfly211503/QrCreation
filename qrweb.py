@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import os
 import segno
 from fpdf import FPDF
@@ -71,4 +71,5 @@ def send():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
